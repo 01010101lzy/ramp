@@ -3694,7 +3694,7 @@ impl Integer for Int {
     }
 }
 
-impl std::iter::Step for Int {
+unsafe impl std::iter::Step for Int {
     fn steps_between(start: &Int, end: &Int) -> Option<usize> {
         let diff = (start - end).abs();
 
@@ -3705,26 +3705,37 @@ impl std::iter::Step for Int {
             Some(usize::from(&diff))
         }
     }
+    // > missing `forward_checked`, `backward_checked`
 
-    fn replace_one(&mut self) -> Self {
-        mem::replace(self, Self::one())
+    // fn replace_one(&mut self) -> Self {
+    //     mem::replace(self, Self::one())
+    // }
+
+    // fn replace_zero(&mut self) -> Self {
+    //     mem::replace(self, Self::zero())
+    // }
+
+    fn forward_checked(lhs:Self,inc:usize)->Option<Self>{
+        Some(lhs+inc)
     }
 
-    fn replace_zero(&mut self) -> Self {
-        mem::replace(self, Self::zero())
+    fn backward_checked(lhs:Self,inc:usize)->Option<Self>{
+        Some(lhs-inc)
     }
 
-    fn add_one(&self) -> Self {
-        self + 1
-    }
+    // ! These are no longer Step trait members
 
-    fn sub_one(&self) -> Self {
-        self - 1
-    }
+    // fn add_one(&self) -> Self {
+    //     self + 1
+    // }
 
-    fn add_usize(&self, n: usize) -> Option<Self> {
-        Some(self + Int::from(n))
-    }
+    // fn sub_one(&self) -> Self {
+    //     self - 1
+    // }
+
+    // fn add_usize(&self, n: usize) -> Option<Self> {
+    //     Some(self + Int::from(n))
+    // }
 }
 
 /// Trait for generating random `Int`s.
